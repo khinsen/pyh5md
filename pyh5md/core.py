@@ -119,6 +119,10 @@ def particle_data(group, name=None, shape=None, dtype=None, data=None, time=True
     """Returns particles data as a FixedData or TimeData."""
     if name is None:
         raise Exception('No name provided')
+    if '/' in name:
+        assert name in ['box/edges', 'box/offset']
+        group = group['box']
+        name = name.split('/')[1]
     if name in group.keys():
         item = group[name]
         if type(item)==h5py.Group:
