@@ -106,6 +106,9 @@ class TimeData(h5py.Group):
         t.resize(idx+1, axis=0)
         t[-1] = time
 
+    def read_slice(self, index):
+        return self.value[index]
+
 class FixedData(h5py.Dataset):
     """Represents time-independent data within a H5MD file."""
     def __init__(self, parent, name, shape=None, dtype=None, data=None, unit=None):
@@ -114,6 +117,8 @@ class FixedData(h5py.Dataset):
         self._id = h5py.h5d.open(parent.id, name)
         if unit is not None:
             self.attrs.create('unit',data=unit,dtype=VL_STR)
+    def read_slice(self, index):
+        return self[...]
 
 def particle_data(group, name=None, shape=None, dtype=None, data=None, time=True, chunks=None, unit=None, time_unit=None):
     """Returns particles data as a FixedData or TimeData."""
